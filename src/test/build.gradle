@@ -1,0 +1,81 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.3'
+    id 'idea'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'checkstyle'
+    id 'pmd'
+    id "com.github.spotbugs" version "4.0.5"
+}
+
+group = 'com.gruntik'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.13.1'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation "org.springframework.boot:spring-boot-starter-jdbc:2.6.3"
+    implementation "com.h2database:h2-mvstore:1.4.197"
+    implementation "org.liquibase:liquibase-core:3.7.0"
+
+    implementation "org.springframework.boot:spring-boot-starter-web:2.6.3"
+    implementation "org.apache.httpcomponents:httpclient:4.5.9"
+
+    implementation "org.springframework.boot:spring-boot-starter-jdbc:2.6.3"
+    implementation "com.h2database:h2:1.4.197"
+    implementation "org.liquibase:liquibase-core:3.7.0"
+
+    implementation "org.projectlombok:lombok:1.18.22"
+
+    annotationProcessor "org.projectlombok:lombok:1.18.22"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.22"
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+apply plugin: 'checkstyle'
+checkstyle {
+    toolVersion '7.8.1'
+    configFile file("config/checkstyle/checkstyle.xml")
+}
+
+apply plugin: "com.github.spotbugs"
+
+[spotbugsMain, spotbugsTest].each { task ->
+    task.configure {
+        reports {
+            html {
+                enabled = true
+                stylesheet = 'fancy-hist.xsl'
+            }
+        }
+    }
+}
+
+idea {
+    project {
+        sourceCompatibility = 11
+        languageLevel = 11
+    }
+}
+
+pmd {
+    ruleSetFiles = files("config/pmd/pmd.xml")
+    ruleSets = []
+}
+
+spotbugs {
+    includeFilter = file("config/spotbugs/spotbugs.xml") as RegularFile
+}
+
+
