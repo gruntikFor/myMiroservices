@@ -54,6 +54,7 @@ class RequestHandlerTest {
                 ));
 
         requestHandler.createRequest(new CreateRequest(UUID.randomUUID(), UUID.randomUUID(), stockCode, 5, LocalDateTime.now()));
+
         mockServer.verify();
     }
 
